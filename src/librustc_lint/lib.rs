@@ -27,6 +27,7 @@ extern crate rustc;
 
 mod error_codes;
 mod nonstandard_style;
+mod redundant_semicolon;
 pub mod builtin;
 mod types;
 mod unused;
@@ -58,6 +59,7 @@ use session::Session;
 use lint::LintId;
 use lint::FutureIncompatibleInfo;
 
+use redundant_semicolon::*;
 use nonstandard_style::*;
 use builtin::*;
 use types::*;
@@ -100,6 +102,7 @@ macro_rules! early_lint_passes {
             DeprecatedAttr: DeprecatedAttr::new(),
             WhileTrue: WhileTrue,
             NonAsciiIdents: NonAsciiIdents,
+            RedundantSemicolon: RedundantSemicolon,
         ]);
     )
 }
@@ -238,6 +241,11 @@ pub fn register_builtins(store: &mut lint::LintStore, sess: Option<&Session>) {
             sess, false, true, false, box BuiltinCombinedLateLintPass::new()
         );
     }
+
+    add_lint_group!(sess,
+                    "redundant_semicolon",
+                    REDUNDANT_SEMICOLON);
+
 
     add_lint_group!(sess,
                     "nonstandard_style",

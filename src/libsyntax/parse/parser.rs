@@ -4511,7 +4511,11 @@ impl<'a> Parser<'a> {
                     if self.token == token::Semi {
                         unused_attrs(&attrs, self);
                         self.bump();
-                        return Ok(None);
+                        return Ok(Some(Stmt {
+                            id: ast::DUMMY_NODE_ID,
+                            span: lo,
+                            node: StmtKind::Semi(DummyResult::raw_expr(lo, false)),
+                        }));
                     }
 
                     if self.token == token::CloseDelim(token::Brace) {
