@@ -2156,6 +2156,7 @@ impl<'a> Parser<'a> {
                     let label = self.eat_label();
                     let ex = ExprKind::Continue(label);
                     let hi = self.prev_span;
+                    self.eat(&token::Semi);
                     return Ok(self.mk_expr(lo.to(hi), ex, attrs));
                 }
                 if self.eat_keyword(kw::Match) {
@@ -2200,6 +2201,7 @@ impl<'a> Parser<'a> {
                     } else {
                         ex = ExprKind::Ret(None);
                     }
+                    self.eat(&token::Semi);
                 } else if self.eat_keyword(kw::Break) {
                     let label = self.eat_label();
                     let e = if self.token.can_begin_expr()
@@ -2212,6 +2214,7 @@ impl<'a> Parser<'a> {
                     };
                     ex = ExprKind::Break(label, e);
                     hi = self.prev_span;
+                    self.eat(&token::Semi);
                 } else if self.eat_keyword(kw::Yield) {
                     if self.token.can_begin_expr() {
                         let e = self.parse_expr()?;
@@ -2220,6 +2223,7 @@ impl<'a> Parser<'a> {
                     } else {
                         ex = ExprKind::Yield(None);
                     }
+                    self.eat(&token::Semi);
                 } else if self.eat_keyword(kw::Let) {
                     return self.parse_let_expr(attrs);
                 } else if is_span_rust_2018 && self.eat_keyword(kw::Await) {
